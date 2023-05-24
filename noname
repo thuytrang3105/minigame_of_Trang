@@ -1,0 +1,60 @@
+class Mobile:
+    def __init__(self):
+        self.battery = 100  # initial battery level
+        self.drafts = ""    # message being composed
+        self.inbox = []     # received messages
+        self.sent = []      # sent messages
+        self.power = False  # phone power status
+
+    def check_power(self):
+        return self.power
+
+    def turn_on(self):
+        self.power = True
+
+    def turn_off(self):
+        self.power = False
+
+    def charge_battery(self):
+        if self.battery < 100:
+            self.battery += 10
+            if self.battery > 100:
+                self.battery = 100
+
+    def write_message(self, text):
+        if self.power:
+            self.drafts += text
+            self.battery -= 1
+
+    def receive_message(self, message):
+        if self.power:
+            self.inbox.append(message)
+            self.battery -= 1
+
+    def send_message(self, message, other_phone):
+        if self.power:
+            other_phone.receive_message(message)
+            self.sent.append(message)
+            self.battery -= 1
+
+    def read_inbox(self):
+        if self.power:
+            for message in self.inbox:
+                print(message)
+
+    def read_sent(self):
+        if self.power:
+            for message in self.sent:
+                print(message)
+
+
+nokia = Mobile()
+iphone = Mobile()
+
+# Nokia writes and sends a message to iPhone
+nokia.write_message("Hello iPhone, how are you doing?")
+nokia.send_message(nokia.drafts, iphone)
+
+# iPhone reads its inbox
+iphone.read_inbox()
+```
